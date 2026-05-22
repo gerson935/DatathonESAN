@@ -1,0 +1,1426 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guía de Riesgo Crediticio — Datathon ESAN 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;600&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0D1B2A;
+    --navy-light: #152234;
+    --navy-mid: #1E3250;
+    --gold: #C9922A;
+    --gold-light: #E8B84B;
+    --gold-pale: #FFF8E7;
+    --teal: #1B7A6B;
+    --teal-light: #25A98E;
+    --teal-pale: #E6F7F4;
+    --red-dark: #8B1A1A;
+    --red-mid: #C0392B;
+    --red-pale: #FDECEA;
+    --amber: #D68910;
+    --amber-pale: #FEF9E7;
+    --green-dark: #1A5276;
+    --green-mid: #27AE60;
+    --green-pale: #E9F7EF;
+    --text: #1a1a2e;
+    --text-mid: #374151;
+    --text-muted: #6B7280;
+    --border: #E5E7EB;
+    --surface: #F9FAFB;
+    --white: #FFFFFF;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: var(--navy);
+    color: var(--white);
+    min-height: 100vh;
+  }
+
+  .hero {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
+    border-bottom: 1px solid rgba(201,146,42,0.3);
+    padding: 3rem 2rem 2.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 300px; height: 300px;
+    border: 1px solid rgba(201,146,42,0.1);
+    border-radius: 50%;
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; left: -40px;
+    width: 200px; height: 200px;
+    border: 1px solid rgba(37,169,142,0.1);
+    border-radius: 50%;
+  }
+
+  .hero-badge {
+    display: inline-block;
+    background: rgba(201,146,42,0.15);
+    border: 1px solid rgba(201,146,42,0.4);
+    color: var(--gold-light);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    border-radius: 20px;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 400;
+    line-height: 1.15;
+    margin-bottom: 1rem;
+    color: var(--white);
+  }
+
+  .hero h1 em {
+    color: var(--gold-light);
+    font-style: italic;
+  }
+
+  .hero p {
+    color: rgba(255,255,255,0.65);
+    font-size: 1rem;
+    max-width: 560px;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+
+  .nav-tabs {
+    background: var(--navy-light);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    overflow-x: auto;
+    padding: 0 1rem;
+    gap: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    scrollbar-width: none;
+  }
+
+  .nav-tabs::-webkit-scrollbar { display: none; }
+
+  .tab-btn {
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.5);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 1rem 1.25rem;
+    cursor: pointer;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
+  }
+
+  .tab-btn:hover { color: rgba(255,255,255,0.8); }
+  .tab-btn.active { color: var(--gold-light); border-bottom-color: var(--gold); }
+
+  .content-area {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 4rem;
+  }
+
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.9rem;
+    font-weight: 400;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+  }
+
+  .section-title span { color: var(--gold-light); }
+
+  .section-sub {
+    color: rgba(255,255,255,0.5);
+    font-size: 0.9rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .card {
+    background: var(--navy-light);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .card-gold {
+    background: rgba(201,146,42,0.06);
+    border-color: rgba(201,146,42,0.25);
+  }
+
+  .card-teal {
+    background: rgba(27,122,107,0.1);
+    border-color: rgba(37,169,142,0.25);
+  }
+
+  .card-red {
+    background: rgba(192,57,43,0.08);
+    border-color: rgba(192,57,43,0.25);
+  }
+
+  .card-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--gold);
+    margin-bottom: 0.75rem;
+  }
+
+  .card h3 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+  }
+
+  .card p {
+    color: rgba(255,255,255,0.65);
+    font-size: 0.9rem;
+    line-height: 1.7;
+  }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+  }
+
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+  }
+
+  .var-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .var-table th {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: rgba(255,255,255,0.4);
+    padding: 0.6rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .var-table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    color: rgba(255,255,255,0.75);
+    vertical-align: top;
+  }
+
+  .var-table tr:hover td { background: rgba(255,255,255,0.03); }
+
+  .var-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--teal-light);
+    font-weight: 600;
+  }
+
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 2px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.3px;
+  }
+
+  .tag-num { background: rgba(26,122,107,0.2); color: #5DDBBB; border: 1px solid rgba(37,169,142,0.3); }
+  .tag-cat { background: rgba(201,146,42,0.15); color: var(--gold-light); border: 1px solid rgba(201,146,42,0.3); }
+  .tag-bin { background: rgba(192,57,43,0.15); color: #F1948A; border: 1px solid rgba(192,57,43,0.3); }
+  .tag-target { background: rgba(192,57,43,0.25); color: #E74C3C; border: 1px solid rgba(192,57,43,0.5); font-weight: 600; }
+  .tag-null { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.4); border: 1px solid rgba(255,255,255,0.1); }
+
+  .metric-box {
+    background: var(--navy-light);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .metric-box h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.3rem;
+    font-weight: 400;
+    color: var(--gold-light);
+    margin-bottom: 0.35rem;
+  }
+
+  .metric-formula {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--teal-light);
+    background: rgba(37,169,142,0.08);
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    margin: 0.75rem 0;
+    display: inline-block;
+  }
+
+  .metric-scale {
+    display: flex;
+    gap: 0;
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 0.75rem 0;
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  .scale-bad { background: rgba(192,57,43,0.4); color: #F1948A; padding: 6px 14px; flex: 1; text-align: center; }
+  .scale-ok { background: rgba(216,137,16,0.4); color: var(--gold-light); padding: 6px 14px; flex: 1; text-align: center; }
+  .scale-good { background: rgba(27,122,107,0.4); color: var(--teal-light); padding: 6px 14px; flex: 1; text-align: center; }
+  .scale-excel { background: rgba(37,169,142,0.4); color: #5DDBBB; padding: 6px 14px; flex: 1; text-align: center; }
+
+  .sbs-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.9rem 1.2rem;
+    border-radius: 8px;
+    margin-bottom: 0.6rem;
+  }
+
+  .sbs-code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.4rem;
+    font-weight: 600;
+    min-width: 32px;
+  }
+
+  .sbs-info { flex: 1; }
+  .sbs-info strong { display: block; font-size: 0.95rem; color: var(--white); }
+  .sbs-info span { font-size: 0.82rem; color: rgba(255,255,255,0.55); }
+
+  .sbs-0 { background: rgba(39,174,96,0.1); border: 1px solid rgba(39,174,96,0.25); }
+  .sbs-0 .sbs-code { color: #58D68D; }
+  .sbs-1 { background: rgba(244,208,63,0.08); border: 1px solid rgba(244,208,63,0.2); }
+  .sbs-1 .sbs-code { color: #F7DC6F; }
+  .sbs-2 { background: rgba(230,126,34,0.08); border: 1px solid rgba(230,126,34,0.2); }
+  .sbs-2 .sbs-code { color: #F0A028; }
+  .sbs-3 { background: rgba(192,57,43,0.1); border: 1px solid rgba(192,57,43,0.25); }
+  .sbs-3 .sbs-code { color: #EC7063; }
+  .sbs-4 { background: rgba(100,30,22,0.2); border: 1px solid rgba(192,57,43,0.4); }
+  .sbs-4 .sbs-code { color: #E74C3C; }
+
+  .policy-band {
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .band-low { background: rgba(27,122,107,0.12); border: 1px solid rgba(37,169,142,0.3); }
+  .band-mid { background: rgba(201,146,42,0.08); border: 1px solid rgba(201,146,42,0.25); }
+  .band-high { background: rgba(192,57,43,0.1); border: 1px solid rgba(192,57,43,0.3); }
+
+  .band-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+  }
+
+  .band-label { font-size: 1rem; font-weight: 600; }
+  .band-low .band-label { color: var(--teal-light); }
+  .band-mid .band-label { color: var(--gold-light); }
+  .band-high .band-label { color: #EC7063; }
+
+  .band-score {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    padding: 3px 12px;
+    border-radius: 20px;
+  }
+
+  .band-low .band-score { background: rgba(37,169,142,0.2); color: var(--teal-light); }
+  .band-mid .band-score { background: rgba(201,146,42,0.2); color: var(--gold-light); }
+  .band-high .band-score { background: rgba(192,57,43,0.2); color: #EC7063; }
+
+  .band-actions { list-style: none; }
+  .band-actions li {
+    color: rgba(255,255,255,0.7);
+    font-size: 0.88rem;
+    padding: 4px 0;
+    padding-left: 1.2rem;
+    position: relative;
+    line-height: 1.5;
+  }
+  .band-actions li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: rgba(255,255,255,0.3);
+    font-size: 0.8rem;
+  }
+
+  .model-card {
+    background: var(--navy-light);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .model-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.25rem;
+    color: var(--gold-light);
+    margin-bottom: 0.25rem;
+  }
+
+  .model-tech {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: rgba(255,255,255,0.35);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.75rem;
+  }
+
+  .pros-cons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin-top: 0.75rem;
+  }
+
+  .pros, .cons { font-size: 0.85rem; line-height: 1.6; }
+  .pros-title { color: var(--teal-light); font-weight: 600; font-size: 12px; margin-bottom: 0.3rem; }
+  .cons-title { color: #EC7063; font-weight: 600; font-size: 12px; margin-bottom: 0.3rem; }
+  .pros li, .cons li { color: rgba(255,255,255,0.6); list-style: none; padding-left: 1rem; position: relative; }
+  .pros li::before { content: '+'; position: absolute; left: 0; color: var(--teal-light); font-weight: 700; }
+  .cons li::before { content: '−'; position: absolute; left: 0; color: #EC7063; font-weight: 700; }
+
+  .pitch-step {
+    display: flex;
+    gap: 1.25rem;
+    margin-bottom: 1.25rem;
+    align-items: flex-start;
+  }
+
+  .step-num {
+    min-width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(201,146,42,0.15);
+    border: 1px solid rgba(201,146,42,0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.1rem;
+    color: var(--gold-light);
+    flex-shrink: 0;
+  }
+
+  .step-content h4 { font-size: 1rem; font-weight: 600; color: var(--white); margin-bottom: 0.35rem; }
+  .step-content p { font-size: 0.88rem; color: rgba(255,255,255,0.6); line-height: 1.65; }
+  .step-content em { color: var(--teal-light); font-style: normal; }
+
+  .insight-box {
+    background: rgba(201,146,42,0.08);
+    border: 1px solid rgba(201,146,42,0.2);
+    border-left: 3px solid var(--gold);
+    border-radius: 0 8px 8px 0;
+    padding: 1rem 1.25rem;
+    margin: 1.25rem 0;
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.8);
+    line-height: 1.7;
+  }
+
+  .insight-box strong { color: var(--gold-light); }
+
+  .warning-box {
+    background: rgba(192,57,43,0.08);
+    border: 1px solid rgba(192,57,43,0.2);
+    border-left: 3px solid #E74C3C;
+    border-radius: 0 8px 8px 0;
+    padding: 1rem 1.25rem;
+    margin: 1.25rem 0;
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.8);
+    line-height: 1.7;
+  }
+
+  .note-box {
+    background: rgba(27,122,107,0.08);
+    border: 1px solid rgba(37,169,142,0.2);
+    border-left: 3px solid var(--teal-light);
+    border-radius: 0 8px 8px 0;
+    padding: 1rem 1.25rem;
+    margin: 1.25rem 0;
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.8);
+    line-height: 1.7;
+  }
+
+  .note-box strong { color: var(--teal-light); }
+
+  .glossary-term {
+    padding: 0.9rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .glossary-term dt {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--teal-light);
+    margin-bottom: 0.3rem;
+  }
+
+  .glossary-term dd {
+    font-size: 0.88rem;
+    color: rgba(255,255,255,0.65);
+    line-height: 1.65;
+    margin-left: 0;
+  }
+
+  .crisp-step {
+    background: var(--navy-light);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    padding: 1.25rem;
+    margin-bottom: 0.75rem;
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .crisp-icon {
+    min-width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: rgba(201,146,42,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+  }
+
+  .crisp-content h4 { font-size: 0.95rem; font-weight: 600; color: var(--white); margin-bottom: 0.3rem; }
+  .crisp-content p { font-size: 0.85rem; color: rgba(255,255,255,0.6); line-height: 1.6; }
+  .crisp-content .your-role { font-size: 0.8rem; color: var(--gold-light); margin-top: 0.4rem; font-weight: 500; }
+
+  footer {
+    text-align: center;
+    padding: 2rem;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.25);
+    font-size: 0.8rem;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  @media (max-width: 600px) {
+    .pros-cons { grid-template-columns: 1fr; }
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    .hero { padding: 2rem 1rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-badge">Datathon ESAN 2026 · Del Score al Insight</div>
+  <h1>Guía de <em>Riesgo Crediticio</em><br>para Administración & Marketing</h1>
+  <p>Tu campo de entrenamiento intensivo. Todo lo que necesitas saber — sin matemáticas innecesarias, con todo el contexto de negocio.</p>
+</div>
+
+<nav class="nav-tabs" id="navTabs">
+  <button class="tab-btn active" data-tab="mision">Tu Misión</button>
+  <button class="tab-btn" data-tab="dataset">El Dataset</button>
+  <button class="tab-btn" data-tab="credito">Crédito 101</button>
+  <button class="tab-btn" data-tab="sbs">Sistema SBS Perú</button>
+  <button class="tab-btn" data-tab="metricas">Las Métricas</button>
+  <button class="tab-btn" data-tab="modelos">Los Modelos</button>
+  <button class="tab-btn" data-tab="shap">SHAP & Explicabilidad</button>
+  <button class="tab-btn" data-tab="politica">Política Crediticia</button>
+  <button class="tab-btn" data-tab="pitch">El Pitch</button>
+  <button class="tab-btn" data-tab="crisp">CRISP-DM Aplicado</button>
+  <button class="tab-btn" data-tab="glosario">Glosario</button>
+</nav>
+
+<div class="content-area">
+
+  <!-- TAB: MISIÓN -->
+  <div class="tab-panel active" id="tab-mision">
+    <div class="section-title">Tu <span>Misión</span> en el Equipo</div>
+    <p class="section-sub">Eres el puente entre el modelo y el negocio. Esa es tu ventaja, no tu debilidad.</p>
+
+    <div class="insight-box">
+      <strong>La verdad incómoda del datathon:</strong> Los ingenieros pueden construir el modelo más sofisticado del mundo, pero si no pueden explicar por qué una persona fue rechazada o cuánto dinero le ahorra a FinanCrece S.A., el modelo vale cero para el jurado. <strong>Tú eres quien hace que el modelo importe.</strong>
+    </div>
+
+    <div class="grid-3">
+      <div class="card card-gold">
+        <div class="card-title">Rol 1</div>
+        <h3>Enfoque de Negocio</h3>
+        <p>Traducir cada variable del dataset a su lógica financiera. Preguntar "¿esto tiene sentido para un banco peruano?" antes de que el modelo aprenda algo absurdo.</p>
+      </div>
+      <div class="card card-teal">
+        <div class="card-title">Rol 2</div>
+        <h3>Investigación & Contexto</h3>
+        <p>Buscar papers sobre scoring crediticio en mercados emergentes, regulación SBS, y evidencia de que el enfoque de tu equipo funciona en la práctica real.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Rol 3</div>
+        <h3>Pitch & Storytelling</h3>
+        <p>Construir la narrativa de las 10 diapositivas. El jurado no quiere ver código: quiere saber cuántos soles les ahorras y por qué deberían creerles.</p>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:1.5rem">
+      <div class="card-title">Las 4 preguntas que el jurado SIEMPRE hace</div>
+      <div class="pitch-step" style="margin-top:0.75rem">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h4>¿Por qué este modelo y no uno más simple?</h4>
+          <p>Tu equipo debe comparar al menos 2 modelos. Tú redactas la justificación de negocio: "XGBoost fue elegido porque en datasets desbalanceados con variables de mora previa, supera a regresión logística en KS sin sacrificar explicabilidad para auditoría regulatoria."</p>
+        </div>
+      </div>
+      <div class="pitch-step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h4>¿Cuánto vale esto en plata?</h4>
+          <p>El impacto en negocio vale 25 puntos. Necesitarás calcular: si la mora actual es 7.8% y el modelo reduce los falsos negativos en X%, ¿cuánto capital se libera? Eso es tuyo.</p>
+        </div>
+      </div>
+      <div class="pitch-step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h4>¿Cómo le explicas al cliente por qué fue rechazado?</h4>
+          <p>SHAP. Tú debes entender SHAP lo suficiente para decir: "El principal factor fue el ratio de endeudamiento de 4.2x, que supera el umbral de riesgo aceptable."</p>
+        </div>
+      </div>
+      <div class="pitch-step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h4>¿Funciona para clientes sin historial bancario?</h4>
+          <p>FinanCrece tiene clientes no bancarizados. Tú debes explicar la estrategia de imputación y qué variables alternativas (ingresos, zona, educación) compensan la falta de historial.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: DATASET -->
+  <div class="tab-panel" id="tab-dataset">
+    <div class="section-title">El <span>Dataset</span> Real</div>
+    <p class="section-sub">8,399 registros · 14 variables · Dataset de contexto entregado por tu equipo (no el set oficial del datathon)</p>
+
+    <div class="warning-box">
+      <strong>Ojo:</strong> En este dataset de contexto, la distribución de la variable objetivo <code>mora</code> está invertida respecto al dataset oficial del datathon (70% morosos vs 22% oficial). Esto es normal — es un conjunto de entrenamiento previo de los ingenieros para explorar el problema. El dataset oficial tendrá 78% buenos / 22% morosos.
+    </div>
+
+    <table class="var-table">
+      <thead>
+        <tr>
+          <th>Variable</th>
+          <th>Tipo</th>
+          <th>Descripción</th>
+          <th>Lo que le dice al banco</th>
+          <th>Nulos</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="var-name">mora</span></td>
+          <td><span class="tag tag-target">TARGET</span></td>
+          <td>Variable objetivo: 0 = al día, 1 = mora</td>
+          <td>Lo que predice el modelo. La pregunta que todo lo define.</td>
+          <td>0</td>
+        </tr>
+        <tr>
+          <td><span class="var-name">atraso</span></td>
+          <td><span class="tag tag-num">Numérico</span></td>
+          <td>Días de atraso acumulados en pagos previos</td>
+          <td>Historia de comportamiento. Un cliente con 60+ días de atraso previo es una alarma roja. Es el predictor más directo de mora futura.</td>
+          <td>0</td>
+        </tr>
+        <tr>
+          <td><span class="var-name">vivienda</span></td>
+          <td><span class="tag tag-cat">Categórico</span></td>
+          <td>Tipo de vivienda: PROPIA / ALQUILADA / FAMILIAR</td>
+          <td>Proxy de estabilidad patrimonial. Vivienda propia = activo = menor riesgo percibido. FAMILIAR sugiere dependencia, pero no es necesariamente negativo en Perú.</td>
+          <td>0</td>
+        </tr>
+        <tr>
+          <td><span class="var-name">edad</span></td>
+          <td><span class="tag tag-num">Numérico</span></td>
+          <td>Edad del solicitante (18–75 años)</td>
+          <td>Relación no lineal con mora. Los más jóvenes (18-25) tienen más riesgo por historial corto. Los muy mayores también tienen patrones distintos. El "punto dulce" suele ser 35-55.</td>
+          <td>0</td>
+        </tr>
+        <tr>
+          <td><span class="var-name">dias_lab</span></td>
+          <td><span class="tag tag-num">Numérico</span></td>
+          <td>Días laborando en el empleo actual (antigüedad laboral)</td>
+          <td>Estabilidad de ingresos. Más días = más estable = menos riesgo. 3,650 días = 10 años. Un trabajador con 30 días es mucho más volátil que uno con 5 años.</td>
+          <td>0</td>
+        </tr>
+        <tr>
+          <td><span class="var-name">exp_sf</span></td>
+          <td><span class="tag tag-num">Numérico</span></td>
+          <td>Meses de experiencia en el sistema financiero formal</td>
+          <td>Los nulos aquí son <strong>clientes sin historial bancario</strong> — el segmento clave de FinanCrece. Tratar bien los nulos en esta variable es parte del reto. Más experiencia = más predecible.</td>
+          <td>1,830 ⚠️</td>
+        </tr>
+        <tr>
+          <td><span class="var-name">nivel_ahorro</span></td>
+          <td><span class="tag tag-num">Numérico</span></td>
+          <td>Nivel de ahorro (en meses estimados)</td>
+          <td>Capacidad de absorber shocks. Alguien con 12 meses de ahorro puede cubrir cuotas si pierde el trabajo. Es un amortiguador de riesgo.</td>
+          <td>0</td>
+        </tr>
+        <tr>
+          <td><span class="var-name">ingreso</span></td>
+          <td><span class="tag tag-num">Numérico</span></td>
+          <td>Ingreso mensual neto declarado (en S/.)</td>
+          <td>Base del análisis de capacidad de pago. Se usa junto con deuda_sf para calcular el ratio de endeudamiento. Rango real: S/. 800 – 25,000.</td>
+          <td>0</td>
+        </tr>
+        <tr>
+          <td><span class="var-name">linea_sf</span></td>
+          <td><span class="tag tag-num">Numérico</span></td>
+          <td>Línea de crédito total aprobada en el sistema financiero</td>
+          <td>Cuánto crédito le ha confiado el sistema financiero. Los nulos = sin historial crediticio. Una línea alta puede indicar buen historial O sobre-endeudamiento.</td>
+          <td>1,127 ⚠️</td>
+        </tr>
+        <tr>
+          <td><span class="var-name">deuda_sf</span></td>
+          <td><span class="tag tag-num">Numérico</span></td>
+          <td>Deuda total actual en el sistema financiero (en S/.)</td>
+          <td>El pasivo financiero visible. Junto con ingreso, da el ratio deuda/ingreso. Nulos: sin deuda registrada (puede ser positivo o indicar informalidad).</td>
+          <td>461 ⚠️</td>
+        </tr>
+        <tr>
+          <td><span class="var-name">score</span></td>
+          <td><span class="tag tag-num">Numérico</span></td>
+          <td>Puntaje crediticio interno del banco (no de buró externo)</td>
+          <td>El modelo actual que ya tienen. Si un modelo nuevo no supera a este score, no hay motivo para cambiarlo. Es el benchmark a vencer.</td>
+          <td>0</td>
+        </tr>
+        <tr>
+          <td><span class="var-name">zona</span></td>
+          <td><span class="tag tag-cat">Categórico</span></td>
+          <td>Región geográfica (25 regiones del Perú)</td>
+          <td>Proxy de condiciones económicas locales. Lima ≠ Loreto en términos de empleo formal, acceso bancario, y ciclos económicos. Puede capturar inequidad geográfica (ojo con sesgos).</td>
+          <td>0</td>
+        </tr>
+        <tr>
+          <td><span class="var-name">clasif_sbs</span></td>
+          <td><span class="tag tag-cat">Categórico</span></td>
+          <td>Clasificación de riesgo de la Superintendencia de Banca y Seguros (0–4)</td>
+          <td>La calificación oficial del regulador peruano. Es quizás la variable más poderosa del dataset. Ver pestaña "Sistema SBS Perú" para detalles completos.</td>
+          <td>0</td>
+        </tr>
+        <tr>
+          <td><span class="var-name">nivel_educ</span></td>
+          <td><span class="tag tag-cat">Categórico</span></td>
+          <td>Nivel educativo: SIN EDUCACION / SECUNDARIA / TECNICA / UNIVERSITARIA</td>
+          <td>Proxy de capacidad de gestión financiera y potencial de ingresos futuros. Útil pero requiere validación: no debe ser un proxy de discriminación.</td>
+          <td>0</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="insight-box">
+      <strong>Insight de negocio clave:</strong> Las variables <code>exp_sf</code> (1,830 nulos) y <code>linea_sf</code> (1,127 nulos) son precisamente los clientes no bancarizados que FinanCrece quiere capturar. El tratamiento de estos nulos no es un problema técnico: <strong>es la estrategia de inclusión financiera</strong>. Proponer imputar con medianas o con modelos basados en <code>ingreso + zona + nivel_educ</code> es una decisión de negocio que tú puedes defender.
+    </div>
+  </div>
+
+  <!-- TAB: CRÉDITO 101 -->
+  <div class="tab-panel" id="tab-credito">
+    <div class="section-title">Riesgo <span>Crediticio</span> 101</div>
+    <p class="section-sub">Todo lo que necesitas entender del negocio financiero para hablar con propiedad.</p>
+
+    <div class="card card-gold">
+      <div class="card-title">¿Qué es el riesgo crediticio?</div>
+      <h3>La probabilidad de que un prestatario no pague</h3>
+      <p>Cuando un banco otorga un crédito, acepta un riesgo: que el cliente no devuelva el dinero. El riesgo crediticio es exactamente eso — la probabilidad de pérdida económica por incumplimiento de pago. Todo el datathon gira alrededor de este problema.</p>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">Las 5 C's del Crédito</div>
+        <h3>El marco clásico de análisis</h3>
+        <p style="margin-bottom:0.75rem">Los bancos analizan solicitantes en 5 dimensiones:</p>
+        <ul style="list-style:none; font-size:0.88rem; color:rgba(255,255,255,0.65); line-height:2">
+          <li><strong style="color:var(--gold-light)">Carácter</strong> — Historial de pagos, comportamiento previo (→ <code>atraso</code>, <code>clasif_sbs</code>)</li>
+          <li><strong style="color:var(--gold-light)">Capacidad</strong> — Ingresos vs. deuda (→ <code>ingreso</code>, <code>deuda_sf</code>)</li>
+          <li><strong style="color:var(--gold-light)">Capital</strong> — Patrimonio, ahorros (→ <code>nivel_ahorro</code>, <code>vivienda</code>)</li>
+          <li><strong style="color:var(--gold-light)">Colateral</strong> — Garantías ofrecidas</li>
+          <li><strong style="color:var(--gold-light)">Condiciones</strong> — Entorno económico (→ <code>zona</code>)</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">Tipos de error del modelo</div>
+        <h3>Lo que más le importa al banco</h3>
+        <p style="margin-bottom:0.75rem; font-size:0.88rem; color:rgba(255,255,255,0.65)">Dos tipos de error tienen costos muy distintos:</p>
+        <div style="background:rgba(192,57,43,0.1); border:1px solid rgba(192,57,43,0.2); border-radius:8px; padding:0.75rem; margin-bottom:0.5rem; font-size:0.85rem; color:rgba(255,255,255,0.75)">
+          <strong style="color:#EC7063">Falso Negativo (peor):</strong> El modelo dice que es buen pagador, pero no lo es. El banco <strong>pierde el capital prestado</strong>. Costo muy alto.
+        </div>
+        <div style="background:rgba(201,146,42,0.08); border:1px solid rgba(201,146,42,0.2); border-radius:8px; padding:0.75rem; font-size:0.85rem; color:rgba(255,255,255,0.75)">
+          <strong style="color:var(--gold-light)">Falso Positivo:</strong> El modelo rechaza a un buen pagador. El banco <strong>pierde un cliente rentable</strong>. Costo menor, pero no trivial.
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:0.5rem">
+      <div class="card-title">El ciclo de crédito</div>
+      <div style="display:flex; align-items:center; gap:0; flex-wrap:wrap; margin:0.75rem 0; font-size:0.82rem">
+        <div style="background:rgba(37,169,142,0.15); border:1px solid rgba(37,169,142,0.3); padding:8px 16px; border-radius:6px; color:var(--teal-light); text-align:center;">Solicitud</div>
+        <div style="color:rgba(255,255,255,0.3); padding:0 8px; font-size:1.2rem">→</div>
+        <div style="background:rgba(201,146,42,0.12); border:1px solid rgba(201,146,42,0.25); padding:8px 16px; border-radius:6px; color:var(--gold-light); text-align:center;">Scoring</div>
+        <div style="color:rgba(255,255,255,0.3); padding:0 8px; font-size:1.2rem">→</div>
+        <div style="background:rgba(201,146,42,0.12); border:1px solid rgba(201,146,42,0.25); padding:8px 16px; border-radius:6px; color:var(--gold-light); text-align:center;">Decisión</div>
+        <div style="color:rgba(255,255,255,0.3); padding:0 8px; font-size:1.2rem">→</div>
+        <div style="background:rgba(37,169,142,0.15); border:1px solid rgba(37,169,142,0.3); padding:8px 16px; border-radius:6px; color:var(--teal-light); text-align:center;">Desembolso</div>
+        <div style="color:rgba(255,255,255,0.3); padding:0 8px; font-size:1.2rem">→</div>
+        <div style="background:rgba(192,57,43,0.1); border:1px solid rgba(192,57,43,0.25); padding:8px 16px; border-radius:6px; color:#EC7063; text-align:center;">Seguimiento</div>
+        <div style="color:rgba(255,255,255,0.3); padding:0 8px; font-size:1.2rem">→</div>
+        <div style="background:rgba(100,30,22,0.2); border:1px solid rgba(192,57,43,0.4); padding:8px 16px; border-radius:6px; color:#E74C3C; text-align:center;">Cobranza / Castigo</div>
+      </div>
+      <p style="font-size:0.85rem; color:rgba(255,255,255,0.55)">El modelo de scoring actúa en el paso "Decisión". Pero sus efectos se miden en "Seguimiento" — 90 días después. Por eso el datathon pide predecir mora a 90 días: es el window estándar de la industria peruana.</p>
+    </div>
+
+    <div class="insight-box">
+      <strong>¿Qué significa que la mora subió de 4.2% a 7.8%?</strong> Que de cada 100 soles prestados, FinanCrece ya no recupera S/. 7.8 (antes eran S/. 4.2). En una cartera de, digamos, S/. 50 millones, eso son S/. 1.8 millones adicionales en pérdidas. <strong>Ese es el problema que tu equipo soluciona.</strong>
+    </div>
+  </div>
+
+  <!-- TAB: SBS PERÚ -->
+  <div class="tab-panel" id="tab-sbs">
+    <div class="section-title">Sistema <span>SBS</span> Perú</div>
+    <p class="section-sub">La Superintendencia de Banca, Seguros y AFP — el regulador que clasifica a cada deudor en el sistema financiero peruano.</p>
+
+    <div class="note-box">
+      <strong>Por qué esto es oro para tu equipo:</strong> La variable <code>clasif_sbs</code> en el dataset es la clasificación regulatoria oficial que la SBS exige a todas las entidades financieras. Es información que ya existe en el sistema y es altamente predictiva. Saber explicarla al jurado demuestra profundidad de conocimiento del mercado peruano.
+    </div>
+
+    <div class="card-title" style="margin-bottom:1rem">La escala de clasificación SBS (Resolución SBS N° 11356-2008)</div>
+
+    <div class="sbs-row sbs-0">
+      <span class="sbs-code">0</span>
+      <div class="sbs-info">
+        <strong>Normal</strong>
+        <span>El deudor atiende sus pagos puntualmente o con atraso máximo de 8 días. Cumple con sus obligaciones normalmente. Bajo riesgo crediticio.</span>
+      </div>
+    </div>
+
+    <div class="sbs-row sbs-1">
+      <span class="sbs-code">1</span>
+      <div class="sbs-info">
+        <strong>Con Problemas Potenciales (CPP)</strong>
+        <span>El deudor presenta atrasos de 9 a 30 días. Su flujo de caja puede ser insuficiente para cubrir pagos futuros. Señal de alerta temprana.</span>
+      </div>
+    </div>
+
+    <div class="sbs-row sbs-2">
+      <span class="sbs-code">2</span>
+      <div class="sbs-info">
+        <strong>Deficiente</strong>
+        <span>Atrasos de 31 a 60 días. El deudor tiene dificultades para pagar y el banco debe hacer provisiones. Probabilidad de pérdida creciente.</span>
+      </div>
+    </div>
+
+    <div class="sbs-row sbs-3">
+      <span class="sbs-code">3</span>
+      <div class="sbs-info">
+        <strong>Dudoso</strong>
+        <span>Atrasos de 61 a 120 días. Alta probabilidad de incumplimiento definitivo. El banco provisiona entre 60-100% del crédito.</span>
+      </div>
+    </div>
+
+    <div class="sbs-row sbs-4">
+      <span class="sbs-code">4</span>
+      <div class="sbs-info">
+        <strong>Pérdida</strong>
+        <span>Más de 120 días de atraso o deudor con escasa o nula posibilidad de recuperación. El crédito se "castiga" (se elimina del activo y se asume como pérdida). Provisión del 100%.</span>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:1.5rem">
+      <div class="card-title">¿Qué son las provisiones?</div>
+      <h3>El colchón de pérdidas esperadas</h3>
+      <p>Cuando un deudor empeora su clasificación SBS, el banco está <strong>obligado por ley</strong> a reservar un porcentaje del crédito como pérdida probable. Esto reduce las utilidades del banco — pero protege a los depositantes y al sistema financiero. Por eso FinanCrece quiere predecir la mora antes: para provisionar menos porque aprueba mejor.</p>
+    </div>
+
+    <div class="insight-box">
+      <strong>Cómo usar esto en el pitch:</strong> "El dataset incluye la clasificación SBS, que permite al modelo aprender los umbrales regulatorios reales del sistema financiero peruano. Esto no solo mejora la precisión predictiva — también asegura que la política crediticia propuesta sea consistente con los estándares de supervisión vigentes."
+    </div>
+  </div>
+
+  <!-- TAB: MÉTRICAS -->
+  <div class="tab-panel" id="tab-metricas">
+    <div class="section-title">Las <span>Métricas</span> que Importan</div>
+    <p class="section-sub">Aprende a leer los números que el jurado evaluará. Cada métrica tiene una historia que contar.</p>
+
+    <div class="metric-box">
+      <h3>AUC-ROC — Área Bajo la Curva</h3>
+      <p style="color:rgba(255,255,255,0.6); font-size:0.88rem; margin:0.5rem 0 0.75rem">La pregunta que responde: <em>si elijo al azar un moroso y un buen pagador, ¿con qué probabilidad el modelo le da mayor score al moroso?</em></p>
+      <span class="metric-formula">AUC = P(score_malo &gt; score_bueno)</span>
+      <div class="metric-scale">
+        <span class="scale-bad">0.5 — Aleatorio (moneda)</span>
+        <span class="scale-ok">0.6–0.7 — Débil</span>
+        <span class="scale-good">0.7–0.8 — Bueno</span>
+        <span class="scale-excel">0.8+ — Excelente en crédito</span>
+      </div>
+      <p style="color:rgba(255,255,255,0.55); font-size:0.83rem">En riesgo crediticio, un AUC de 0.75 ya es funcional. Modelos de bureaus como Equifax suelen estar en 0.80-0.85.</p>
+    </div>
+
+    <div class="metric-box">
+      <h3>Gini — El primo del AUC</h3>
+      <p style="color:rgba(255,255,255,0.6); font-size:0.88rem; margin:0.5rem 0 0.75rem">Transformación directa del AUC. Más intuitivo para comunicar discriminación.</p>
+      <span class="metric-formula">Gini = 2 × AUC − 1</span>
+      <div class="metric-scale">
+        <span class="scale-bad">0 — Sin poder</span>
+        <span class="scale-ok">0.3–0.4 — Aceptable</span>
+        <span class="scale-good">0.4–0.6 — Bueno</span>
+        <span class="scale-excel">0.6+ — Muy sólido</span>
+      </div>
+      <p style="color:rgba(255,255,255,0.55); font-size:0.83rem">Si AUC = 0.78 → Gini = 0.56. Un Gini de 0.60 es considerado muy sólido en el mercado peruano de crédito.</p>
+    </div>
+
+    <div class="metric-box">
+      <h3>KS — Kolmogorov-Smirnov</h3>
+      <p style="color:rgba(255,255,255,0.6); font-size:0.88rem; margin:0.5rem 0 0.75rem">Mide la máxima separación entre la distribución acumulada de buenos y de malos. <em>¿En qué punto del score el modelo discrimina mejor?</em></p>
+      <span class="metric-formula">KS = max|F_buenos(x) − F_malos(x)|</span>
+      <div class="metric-scale">
+        <span class="scale-bad">&lt;20% — Débil</span>
+        <span class="scale-ok">20–40% — Aceptable</span>
+        <span class="scale-good">40–50% — Bueno</span>
+        <span class="scale-excel">50%+ — Excelente</span>
+      </div>
+      <p style="color:rgba(255,255,255,0.55); font-size:0.83rem">El KS es muy usado en Perú porque indica dónde colocar el umbral de corte (cutoff) para maximizar la separación entre buenos y malos clientes.</p>
+    </div>
+
+    <div class="metric-box">
+      <h3>PSI — Population Stability Index</h3>
+      <p style="color:rgba(255,255,255,0.6); font-size:0.88rem; margin:0.5rem 0 0.75rem">No mide precisión: mide si la población que usa el modelo es la misma que la de entrenamiento. <em>¿El modelo está envejeciendo bien?</em></p>
+      <span class="metric-formula">PSI = Σ (Actual% − Esperado%) × ln(Actual% / Esperado%)</span>
+      <div class="metric-scale">
+        <span class="scale-excel">&lt;0.10 — Estable</span>
+        <span class="scale-ok">0.10–0.25 — Alerta</span>
+        <span class="scale-bad">&gt;0.25 — Reentrenar</span>
+      </div>
+      <p style="color:rgba(255,255,255,0.55); font-size:0.83rem">FinanCrece tiene clientes nuevos no bancarizados que no existían cuando se entrenaron los modelos actuales. Eso explica el PSI alto y el deterioro de la cartera.</p>
+    </div>
+
+    <div class="grid-2">
+      <div class="metric-box" style="margin-bottom:0">
+        <h3>Precision & Recall</h3>
+        <span class="metric-formula">Precision = VP / (VP + FP)</span>
+        <span class="metric-formula" style="display:block;margin-top:6px">Recall = VP / (VP + FN)</span>
+        <p style="color:rgba(255,255,255,0.55); font-size:0.83rem; margin-top:0.75rem">Recall alto = no dejamos escapar morosos (aunque rechacemos más clientes). Precision alta = los que rechazamos realmente eran malos. En crédito, <strong>Recall es más crítico</strong>.</p>
+      </div>
+      <div class="metric-box" style="margin-bottom:0">
+        <h3>F1-Score</h3>
+        <span class="metric-formula">F1 = 2 × (P × R) / (P + R)</span>
+        <p style="color:rgba(255,255,255,0.55); font-size:0.83rem; margin-top:0.75rem">Media armónica entre Precision y Recall. Ideal cuando el dataset está desbalanceado (más buenos que malos), como en el datathon (78/22). Nunca usar solo accuracy.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: MODELOS -->
+  <div class="tab-panel" id="tab-modelos">
+    <div class="section-title">Los <span>Modelos</span> de ML</div>
+    <p class="section-sub">Explicados para negocio. Tú no los programas, pero sí los defiendes.</p>
+
+    <div class="model-card">
+      <div class="model-name">Regresión Logística</div>
+      <div class="model-tech">Baseline · Modelo Lineal · Alta Explicabilidad</div>
+      <p style="font-size:0.88rem; color:rgba(255,255,255,0.65); line-height:1.7">Calcula la probabilidad de mora como una función del tipo <em>P(mora) = 1/(1+e^-(β₀ + β₁×ingreso + β₂×atraso + ...))</em>. Cada variable tiene un peso (β) que indica su importancia. Es el modelo que usa actualmente FinanCrece (y al que deben superar).</p>
+      <div class="pros-cons">
+        <div class="pros">
+          <div class="pros-title">Ventajas para el negocio</div>
+          <ul>
+            <li>Fácil de explicar al regulador SBS</li>
+            <li>Los coeficientes tienen interpretación directa</li>
+            <li>Rápido de calcular en producción</li>
+            <li>Excelente baseline de comparación</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <div class="cons-title">Limitaciones</div>
+          <ul>
+            <li>No captura relaciones no lineales</li>
+            <li>Sensible a outliers en las variables</li>
+            <li>No maneja bien interacciones complejas</li>
+            <li>Puede tener bajo KS en datasets complejos</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="model-card">
+      <div class="model-name">Random Forest</div>
+      <div class="model-tech">Ensemble · Múltiples Árboles de Decisión · Robusto</div>
+      <p style="font-size:0.88rem; color:rgba(255,255,255,0.65); line-height:1.7">Entrena cientos de "árboles de decisión" (como árboles de preguntas Sí/No sobre las variables) y vota por mayoría. Cada árbol ve una muestra aleatoria de datos y variables. El resultado es muy robusto porque los errores de un árbol son compensados por los demás.</p>
+      <div class="pros-cons">
+        <div class="pros">
+          <div class="pros-title">Ventajas para el negocio</div>
+          <ul>
+            <li>Maneja valores nulos y variables mixtas</li>
+            <li>No requiere escalar las variables</li>
+            <li>Feature importance incorporado</li>
+            <li>Resistente al overfitting</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <div class="cons-title">Limitaciones</div>
+          <ul>
+            <li>Modelo "caja negra" (sin SHAP es difícil)</li>
+            <li>Pesado en memoria para producción</li>
+            <li>Más lento que Logit en inferencia</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="model-card" style="border-color: rgba(201,146,42,0.3)">
+      <div class="model-name">XGBoost / LightGBM</div>
+      <div class="model-tech">Gradient Boosting · Estándar de la Industria · Alto AUC</div>
+      <p style="font-size:0.88rem; color:rgba(255,255,255,0.65); line-height:1.7">Construye árboles de forma secuencial: cada árbol corrige los errores del anterior. Es el modelo que gana la mayoría de competencias de credit scoring en el mundo. LightGBM es la versión optimizada para velocidad.</p>
+      <div class="pros-cons">
+        <div class="pros">
+          <div class="pros-title">Ventajas para el negocio</div>
+          <ul>
+            <li>Mejor AUC y KS en casi todos los casos</li>
+            <li>Maneja muy bien el desbalance de clases</li>
+            <li>Compatible con SHAP para explicabilidad</li>
+            <li>Usado en producción por Scotiabank, BCP, Interbank</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <div class="cons-title">Limitaciones</div>
+          <ul>
+            <li>Más difícil de explicar sin SHAP</li>
+            <li>Requiere tunear hiperparámetros</li>
+            <li>Puede sobreajustarse si no se valida bien</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="insight-box">
+      <strong>Tu argumento para el jurado:</strong> "Comenzamos con Regresión Logística como baseline interpretable — el estándar que la SBS puede auditar fácilmente. Luego evaluamos XGBoost porque el problema real de FinanCrece son los clientes no bancarizados, donde las relaciones entre variables son no lineales: un cliente joven con alto ingreso pero sin historial no se comporta igual que una logística puede predecir. El resultado: +12 puntos de KS sobre el modelo actual."
+    </div>
+  </div>
+
+  <!-- TAB: SHAP -->
+  <div class="tab-panel" id="tab-shap">
+    <div class="section-title">SHAP & <span>Explicabilidad</span></div>
+    <p class="section-sub">Cómo responder "¿por qué rechazaron mi crédito?" con matemáticas y sentido de negocio.</p>
+
+    <div class="card card-teal">
+      <div class="card-title">¿Qué es SHAP?</div>
+      <h3>SHapley Additive exPlanations</h3>
+      <p>SHAP calcula, para cada predicción individual, cuánto contribuyó cada variable al score final. Basado en la teoría de juegos de Shapley (premio Nobel de Economía 2012): cada "jugador" (variable) recibe una retribución justa por su contribución al "resultado" (el score).</p>
+    </div>
+
+    <div class="card" style="margin-top:1rem">
+      <div class="card-title">Ejemplo real con el dataset</div>
+      <p style="font-size:0.88rem; color:rgba(255,255,255,0.55); margin-bottom:1rem">Score promedio del modelo = 0.35 (prob. de mora). Para el cliente José Quispe (prob. predicha = 0.72):</p>
+      <div style="font-size:0.88rem">
+        <div style="display:flex; align-items:center; gap:1rem; padding:0.6rem 0; border-bottom:1px solid rgba(255,255,255,0.06)">
+          <span class="var-name" style="min-width:120px">clasif_sbs = 3</span>
+          <span style="color:#EC7063; font-weight:600; min-width:60px">+0.18</span>
+          <div style="flex:1; height:6px; border-radius:3px; background:rgba(192,57,43,0.5)"></div>
+          <span style="color:rgba(255,255,255,0.5); font-size:0.8rem">Clasificado como "Dudoso" por SBS</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:1rem; padding:0.6rem 0; border-bottom:1px solid rgba(255,255,255,0.06)">
+          <span class="var-name" style="min-width:120px">atraso = 180</span>
+          <span style="color:#EC7063; font-weight:600; min-width:60px">+0.12</span>
+          <div style="flex:1; height:6px; border-radius:3px; background:rgba(192,57,43,0.35)"></div>
+          <span style="color:rgba(255,255,255,0.5); font-size:0.8rem">180 días de atraso acumulado</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:1rem; padding:0.6rem 0; border-bottom:1px solid rgba(255,255,255,0.06)">
+          <span class="var-name" style="min-width:120px">exp_sf = nulo</span>
+          <span style="color:#EC7063; font-weight:600; min-width:60px">+0.07</span>
+          <div style="flex:1; height:6px; border-radius:3px; background:rgba(192,57,43,0.2)"></div>
+          <span style="color:rgba(255,255,255,0.5); font-size:0.8rem">Sin historial en sistema financiero</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:1rem; padding:0.6rem 0; border-bottom:1px solid rgba(255,255,255,0.06)">
+          <span class="var-name" style="min-width:120px">ingreso = 3,500</span>
+          <span style="color:var(--teal-light); font-weight:600; min-width:60px">−0.06</span>
+          <div style="flex:1; height:6px; border-radius:3px; background:rgba(37,169,142,0.25)"></div>
+          <span style="color:rgba(255,255,255,0.5); font-size:0.8rem">Ingreso adecuado — reduce el riesgo</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:1rem; padding:0.6rem 0">
+          <span class="var-name" style="min-width:120px">dias_lab = 4,200</span>
+          <span style="color:var(--teal-light); font-weight:600; min-width:60px">−0.04</span>
+          <div style="flex:1; height:6px; border-radius:3px; background:rgba(37,169,142,0.15)"></div>
+          <span style="color:rgba(255,255,255,0.5); font-size:0.8rem">11 años de antigüedad laboral</span>
+        </div>
+      </div>
+      <div style="margin-top:0.75rem; padding:0.75rem; background:rgba(255,255,255,0.04); border-radius:8px; font-size:0.83rem; color:rgba(255,255,255,0.5)">
+        Score base 0.35 + 0.18 + 0.12 + 0.07 − 0.06 − 0.04 = <strong style="color:var(--white)">0.62</strong> (ajustado a 0.72 con otras variables menores)
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-top:1rem">
+      <div class="card">
+        <div class="card-title">SHAP Global</div>
+        <h3>¿Qué variables importan más al modelo?</h3>
+        <p>El gráfico de "beeswarm" o "feature importance" SHAP muestra el ranking de variables por impacto promedio. Útil para decirle al negocio: "Las 3 variables que más predicen la mora son..."</p>
+      </div>
+      <div class="card">
+        <div class="card-title">SHAP Local</div>
+        <h3>¿Por qué ESTE cliente fue rechazado?</h3>
+        <p>El "waterfall plot" o "force plot" muestra la contribución de cada variable a UNA predicción específica. Útil para cumplimiento regulatorio y explicación al cliente.</p>
+      </div>
+    </div>
+
+    <div class="insight-box">
+      <strong>Para el pitch:</strong> "El marco regulatorio peruano (Ley 29571 — Código del Consumidor) exige que las entidades financieras puedan explicar las razones de un rechazo. Con SHAP, FinanCrece puede generar automáticamente: 'Su solicitud fue observada principalmente porque su clasificación en el sistema financiero es Dudosa (Categoría 3) y registra 180 días de atraso acumulado.' Esto no solo es un beneficio técnico — es un requisito legal."
+    </div>
+  </div>
+
+  <!-- TAB: POLÍTICA CREDITICIA -->
+  <div class="tab-panel" id="tab-politica">
+    <div class="section-title">Política <span>Crediticia</span></div>
+    <p class="section-sub">Las 3 bandas de riesgo — el entregable de negocio más valorado por el jurado (25 puntos).</p>
+
+    <div class="card" style="margin-bottom:1.5rem">
+      <div class="card-title">¿Qué es una política crediticia?</div>
+      <p>Es el conjunto de reglas que transforma el score del modelo en una decisión de negocio concreta: aprobar, aprobar con condiciones, o rechazar. El modelo predice probabilidades; la política convierte esas probabilidades en acción.</p>
+    </div>
+
+    <div class="policy-band band-low">
+      <div class="band-header">
+        <span class="band-label">✓ Banda Verde — Riesgo Bajo</span>
+        <span class="band-score">P(mora) &lt; 0.25</span>
+      </div>
+      <ul class="band-actions">
+        <li>Aprobación automática sin revisión manual adicional</li>
+        <li>Línea de crédito completa solicitada o hasta 150% según perfil</li>
+        <li>Tasa de interés preferencial (menor spread sobre la tasa base)</li>
+        <li>Plazo de crédito extendido disponible (24–48 meses)</li>
+        <li>Elegible para productos cross-selling (tarjeta, seguro de desgravamen)</li>
+      </ul>
+    </div>
+
+    <div class="policy-band band-mid">
+      <div class="band-header">
+        <span class="band-label">⚠ Banda Ámbar — Riesgo Medio</span>
+        <span class="band-score">0.25 ≤ P(mora) &lt; 0.55</span>
+      </div>
+      <ul class="band-actions">
+        <li>Aprobación condicional — pasa a revisión por analista de crédito</li>
+        <li>Línea de crédito reducida al 60-80% de lo solicitado</li>
+        <li>Tasa de interés estándar o con spread adicional de 2-4%</li>
+        <li>Plazo máximo restringido (12–24 meses)</li>
+        <li>Puede requerir garantía adicional o aval</li>
+        <li>Seguimiento mensual del comportamiento de pago</li>
+      </ul>
+    </div>
+
+    <div class="policy-band band-high">
+      <div class="band-header">
+        <span class="band-label">✕ Banda Roja — Riesgo Alto</span>
+        <span class="band-score">P(mora) ≥ 0.55</span>
+      </div>
+      <ul class="band-actions">
+        <li>Rechazo automático de la solicitud</li>
+        <li>Comunicación de razones específicas al solicitante (cumplimiento SBS)</li>
+        <li>Derivación a programa de educación financiera y mejora crediticia</li>
+        <li>Invitación a re-solicitar en 6 meses con mejora documentada</li>
+        <li>Posibilidad de producto microcrediticio alternativo de menor monto</li>
+      </ul>
+    </div>
+
+    <div class="insight-box" style="margin-top:1.5rem">
+      <strong>Cómo calcular el impacto en negocio:</strong> Si la banda roja cubre el 22% de solicitudes (los morosos actuales) y el ticket promedio es S/. 8,000, y la tasa de recuperación en mora es del 40%, entonces por cada 100 solicitudes rechazadas correctamente, FinanCrece evita S/. 800,000 × 0.6 = <strong>S/. 480,000 en pérdidas netas</strong>. Ese es el cálculo que hace brillar un pitch.
+    </div>
+
+    <div class="card" style="margin-top:1rem">
+      <div class="card-title">El umbral de corte (cutoff) — la decisión más importante</div>
+      <h3>No existe el umbral perfecto, existe el adecuado para el contexto</h3>
+      <p style="margin-bottom:0.75rem">Mover el umbral de 0.5 a 0.35 detecta más morosos (mayor Recall) pero también rechaza más buenos clientes (menor Precision). La elección óptima depende del costo relativo de ambos errores.</p>
+      <p style="font-size:0.85rem; color:rgba(255,255,255,0.55)">En el pitch: "Propusimos el umbral de 0.40 porque, dado el costo de capital de FinanCrece y su tasa de mora actual del 7.8%, minimizar falsos negativos tiene mayor prioridad que capturar todo el mercado. Este umbral maximiza el valor esperado ajustado por riesgo de la cartera."</p>
+    </div>
+  </div>
+
+  <!-- TAB: PITCH -->
+  <div class="tab-panel" id="tab-pitch">
+    <div class="section-title">El <span>Pitch</span> Ganador</div>
+    <p class="section-sub">Estructura de las 10 diapositivas. Tu rol es protagónico aquí — 20 puntos del jurado.</p>
+
+    <div class="pitch-step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <h4>El Problema (con números reales)</h4>
+        <p>No empieces con "la mora subió". Empieza con <em>el dolor</em>: "FinanCrece ha perdido S/. X millones en 18 meses por un modelo que no ve a los clientes no bancarizados." Usa el dato del PDF: 4.2% → 7.8% de mora = +3.6 puntos porcentuales. Si la cartera es S/. 50M, eso son S/. 1.8M en pérdidas adicionales.</p>
+      </div>
+    </div>
+
+    <div class="pitch-step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <h4>Los Datos (EDA resumido para ejecutivos)</h4>
+        <p>Un gráfico de distribución del score por buenos/malos. Un heatmap de correlaciones. Y el hallazgo más importante del EDA: <em>"Descubrimos que el 21.8% de los solicitantes no tienen historial en el sistema financiero — exactamente el segmento que está generando la mora nueva."</em></p>
+      </div>
+    </div>
+
+    <div class="pitch-step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <h4>El Enfoque Metodológico</h4>
+        <p>CRISP-DM aplicado al caso. Mínimo 2 modelos comparados. Menciona la validación temporal (out-of-time) — demuestra que sabes que un modelo que funciona hoy puede fallar mañana.</p>
+      </div>
+    </div>
+
+    <div class="pitch-step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <h4>Comparativa de Modelos</h4>
+        <p>Tabla limpia: Logit vs XGBoost (o RF). Columnas: AUC, KS, Gini, F1, Tiempo de inferencia. <em>Una fila extra para el modelo actual del banco como baseline.</em> El jurado quiere ver que saben comparar, no solo que construyeron un modelo.</p>
+      </div>
+    </div>
+
+    <div class="pitch-step">
+      <div class="step-num">5</div>
+      <div class="step-content">
+        <h4>Las Variables Más Importantes (SHAP)</h4>
+        <p>Un gráfico de importancia de variables con su interpretación de negocio. No "clasif_sbs tiene SHAP value de 0.23". Sino: <em>"La clasificación regulatoria SBS es el predictor más poderoso — los clientes con categoría 3 o 4 tienen una mora predicha 4 veces mayor que los clientes Normal."</em></p>
+      </div>
+    </div>
+
+    <div class="pitch-step">
+      <div class="step-num">6</div>
+      <div class="step-content">
+        <h4>La Política Crediticia</h4>
+        <p>Las 3 bandas visualmente. Colores verde/ámbar/rojo. Para cada banda: criterio de score, acción de negocio, y el % estimado de la cartera que cae en cada categoría.</p>
+      </div>
+    </div>
+
+    <div class="pitch-step">
+      <div class="step-num">7</div>
+      <div class="step-content">
+        <h4>El Impacto en Negocio (en soles)</h4>
+        <p>La diapositiva más importante. Tres números grandes: <em>Reducción estimada de mora</em> (en pp), <em>Capital recuperado</em> (en S/.), <em>ROI del modelo</em> (comparado con el costo de implementación). Si no tienes todos los datos, usa rangos: "entre S/. 800K y S/. 1.5M anuales bajo supuestos conservadores."</p>
+      </div>
+    </div>
+
+    <div class="pitch-step">
+      <div class="step-num">8</div>
+      <div class="step-content">
+        <h4>Estrategia de Inclusión Financiera</h4>
+        <p>FinanCrece sirve a no bancarizados. Muestra que el modelo no los excluye arbitrariamente: <em>"Para clientes sin historial, usamos variables alternativas como nivel_educ + zona + dias_lab para estimar riesgo. Esto amplía el mercado potencial en 21.8% sin aumentar proporcionalmente la mora."</em></p>
+      </div>
+    </div>
+
+    <div class="pitch-step">
+      <div class="step-num">9</div>
+      <div class="step-content">
+        <h4>Ruta a Producción</h4>
+        <p>Checklist del pipeline: datos disponibles en producción, cálculo de features igual que en entrenamiento, dónde se guarda el score, cómo se monitorea con PSI. El jurado valora que piensan más allá del notebook.</p>
+      </div>
+    </div>
+
+    <div class="pitch-step">
+      <div class="step-num">10</div>
+      <div class="step-content">
+        <h4>Cierre con Imagen</h4>
+        <p>No termines con "Conclusiones". Termina con una imagen: <em>"FinanCrece en 12 meses: mora bajo 5%, cartera de no bancarizados creciendo al 15%, y un modelo que el regulador SBS puede auditar y defender."</em> Eso es lo que el jurado recuerda.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: CRISP-DM -->
+  <div class="tab-panel" id="tab-crisp">
+    <div class="section-title">CRISP-DM <span>Aplicado</span></div>
+    <p class="section-sub">El método que ya conoces, aplicado específicamente al caso FinanCrece. Tu rol en cada fase.</p>
+
+    <div class="crisp-step">
+      <div class="crisp-icon">🎯</div>
+      <div class="crisp-content">
+        <h4>1. Comprensión del Negocio (Business Understanding)</h4>
+        <p>Definir exactamente qué predecir: mora > 90 días. Entender por qué el modelo actual falla (baja discriminación en no bancarizados). Establecer métricas de éxito: AUC > 0.75, KS > 35%, y reducción de mora > 2pp.</p>
+        <div class="your-role">📌 Tu rol: Redactar las preguntas de negocio, los criterios de éxito, y el análisis del impacto actual. Lideras esta fase.</div>
+      </div>
+    </div>
+
+    <div class="crisp-step">
+      <div class="crisp-icon">🔍</div>
+      <div class="crisp-content">
+        <h4>2. Comprensión de los Datos (Data Understanding)</h4>
+        <p>EDA: distribuciones, correlaciones, outliers, desbalance de clases (78/22). Identificar las 3 variables con nulos (exp_sf, linea_sf, deuda_sf). Entender qué representa clasif_sbs en el contexto regulatorio peruano.</p>
+        <div class="your-role">📌 Tu rol: Interpretar los hallazgos del EDA desde la lógica de negocio. "El 21.8% sin historial bancario no es ruido — es el segmento de crecimiento de FinanCrece."</div>
+      </div>
+    </div>
+
+    <div class="crisp-step">
+      <div class="crisp-icon">⚙️</div>
+      <div class="crisp-content">
+        <h4>3. Preparación de Datos (Data Preparation)</h4>
+        <p>Imputación de nulos en exp_sf (¿mediana? ¿modelo auxiliar?), encoding de variables categóricas (zona, vivienda, nivel_educ), creación de features derivados (ratio deuda_sf/ingreso). Manejo del desbalance con SMOTE o class_weight.</p>
+        <div class="your-role">📌 Tu rol: Justificar las decisiones de imputación desde la lógica de negocio. "Imputar exp_sf con 0 tiene sentido: los nulos son clientes sin historial, no datos faltantes."</div>
+      </div>
+    </div>
+
+    <div class="crisp-step">
+      <div class="crisp-icon">🤖</div>
+      <div class="crisp-content">
+        <h4>4. Modelado (Modeling)</h4>
+        <p>Entrenar mínimo 2 modelos. Usar validación temporal (out-of-time), no k-fold aleatorio, porque los datos tienen estructura temporal. Optimizar el umbral de corte según el costo de los errores.</p>
+        <div class="your-role">📌 Tu rol: Defender la elección de modelos y la estrategia de validación. "Elegimos out-of-time porque simula las condiciones reales de producción."</div>
+      </div>
+    </div>
+
+    <div class="crisp-step">
+      <div class="crisp-icon">📊</div>
+      <div class="crisp-content">
+        <h4>5. Evaluación (Evaluation)</h4>
+        <p>Comparar AUC, KS, Gini, F1, PSI. Analizar SHAP para interpretabilidad. Revisar performance por segmento (zona, nivel_educ) para detectar sesgos. Simular impacto económico con el umbral seleccionado.</p>
+        <div class="your-role">📌 Tu rol: Traducir las métricas a lenguaje ejecutivo. Construir la tabla comparativa y el análisis de impacto en soles. Totalmente tuyo.</div>
+      </div>
+    </div>
+
+    <div class="crisp-step">
+      <div class="crisp-icon">🚀</div>
+      <div class="crisp-content">
+        <h4>6. Despliegue (Deployment)</h4>
+        <p>En el datathon no hay deployment real, pero debes describir cómo sería: pipeline reproducible, score almacenado con metadata, monitoreo con PSI mensual, alertas si KS cae más de 5pp.</p>
+        <div class="your-role">📌 Tu rol: Redactar el checklist de producción y la diapositiva de "Ruta a Producción". Aquí usas el checklist del PDF de contexto (12 preguntas críticas del pipeline).</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: GLOSARIO -->
+  <div class="tab-panel" id="tab-glosario">
+    <div class="section-title"><span>Glosario</span> Esencial</div>
+    <p class="section-sub">Los términos que el jurado usará y que tú debes dominar.</p>
+
+    <dl>
+      <div class="glossary-term">
+        <dt>Score crediticio</dt>
+        <dd>Número que resume el riesgo de un solicitante. Puede ser la probabilidad directa de mora (0-1) o una escala transformada (300-850). El modelo del datathon produce probabilidades entre 0 y 1.</dd>
+      </div>
+      <div class="glossary-term">
+        <dt>Default / Incumplimiento</dt>
+        <dd>Cuando un deudor deja de pagar según lo pactado. En el datathon, se define como mora mayor a 90 días (variable default_90d en el dataset oficial).</dd>
+      </div>
+      <div class="glossary-term">
+        <dt>PD — Probability of Default</dt>
+        <dd>Lo que predice el modelo: la probabilidad de que un cliente caiga en mora. Es el output principal del modelo de scoring.</dd>
+      </div>
+      <div class="glossary-term">
+        <dt>LGD — Loss Given Default</dt>
+        <dd>¿Cuánto pierde el banco cuando un cliente cae en mora? Si se presta S/. 10,000 y se recupera S/. 4,000, LGD = 60%. Junto con PD, permite calcular la pérdida esperada.</dd>
+      </div>
+      <div class="glossary-term">
+        <dt>EL — Expected Loss (Pérdida Esperada)</dt>
+        <dd>EL = PD × LGD × EAD. La fórmula del capital en riesgo. EAD = Exposure at Default (cuánto está prestado al momento del incumplimiento).</dd>
+      </div>
+      <div class="glossary-term">
+        <dt>Cartera / Portfolio</dt>
+        <dd>El conjunto de todos los créditos vigentes de una entidad financiera. "Gestión de cartera" = optimizar qué créditos aprobar para maximizar rentabilidad ajustada por riesgo.</dd>
+      </div>
+      <div class="glossary-term">
+        <dt>Provisiones</dt>
+        <dd>Reservas que el banco constituye por ley ante el deterioro de un crédito. Si clasif_sbs sube de 0 a 3, el banco debe provisionar hasta el 100% del crédito. Reduce utilidades inmediatamente.</dd>
+      </div>
+      <div class="glossary-term">
+        <dt>Cohorte</dt>
+        <dd>Grupo de clientes que ingresan al sistema en el mismo periodo (ej: todos los créditos aprobados en enero 2023). El análisis por cohortes permite ver cómo evoluciona la mora de cada generación de clientes.</dd>
+      </div>
+      <div class="glossary-term">
+        <dt>Overfitting</dt>
+        <dd>Cuando el modelo "memoriza" los datos de entrenamiento y falla con datos nuevos. Se detecta cuando el AUC en entrenamiento es mucho mayor que en validación. Fatal para un modelo de producción.</dd>
+      </div>
+      <div class="glossary-term">
+        <dt>Feature Engineering</dt>
+        <dd>Crear nuevas variables a partir de las existentes. Ej: ratio_deuda_ingreso = deuda_sf / ingreso. Una variable construida con lógica de negocio puede ser más predictiva que sus componentes por separado.</dd>
+      </div>
+      <div class="glossary-term">
+        <dt>SMOTE — Oversampling</dt>
+        <dd>Técnica para manejar el desbalance de clases (78% buenos / 22% malos). Genera ejemplos sintéticos de la clase minoritaria (morosos) para que el modelo aprenda mejor. Debe aplicarse solo en entrenamiento, nunca en validación.</dd>
+      </div>
+      <div class="glossary-term">
+        <dt>Imputación</dt>
+        <dd>Estrategia para tratar valores nulos. Opciones: mediana (para numéricos), moda (para categóricos), modelo de predicción (imputación basada en otras variables), o valor especial "sin historial" = 0. La elección tiene implicancias de negocio.</dd>
+      </div>
+      <div class="glossary-term">
+        <dt>Cutoff / Umbral de corte</dt>
+        <dd>El valor de probabilidad a partir del cual el modelo "rechaza" una solicitud. Si cutoff = 0.40, cualquier cliente con P(mora) ≥ 0.40 es rechazado. Moverlo cambia el balance entre Precision y Recall.</dd>
+      </div>
+      <div class="glossary-term">
+        <dt>Incumbente</dt>
+        <dd>El modelo actual que el challenger (modelo nuevo) debe superar. En el datathon, el modelo de regresión logística con variables sociodemográficas básicas que usa actualmente FinanCrece.</dd>
+      </div>
+      <div class="glossary-term">
+        <dt>MLOps</dt>
+        <dd>Prácticas de ingeniería para llevar modelos de ML a producción y mantenerlos: versionado, monitoreo, reentrenamiento automático. En el pitch, mencionarlo demuestra que piensan en el largo plazo.</dd>
+      </div>
+      <div class="glossary-term">
+        <dt>Tasa de mora</dt>
+        <dd>Porcentaje de la cartera que está en situación de incumplimiento. Mora del 7.8% significa que de cada S/. 100 prestados, S/. 7.8 no están siendo pagados en los términos acordados.</dd>
+      </div>
+    </dl>
+  </div>
+
+</div>
+
+<footer>
+  Datathon ESAN 2026 · Del Score al Insight · Guía de Riesgo Crediticio v1.0
+</footer>
+
+<script>
+  const tabs = document.querySelectorAll('.tab-btn');
+  const panels = document.querySelectorAll('.tab-panel');
+
+  tabs.forEach(btn => {
+    btn.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      panels.forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      const target = document.getElementById('tab-' + btn.dataset.tab);
+      if (target) target.classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+</script>
+
+</body>
+</html>
